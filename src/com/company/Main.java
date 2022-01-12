@@ -23,5 +23,7 @@ public class Main {
                     configuration.configure().buildSessionFactory();
         }
         return sessionFactory;
+
+
     }
 }
