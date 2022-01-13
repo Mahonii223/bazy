@@ -1,4 +1,4 @@
-package com.company;
+package com.company.entities;
 
 import javax.persistence.*;
 import java.util.Objects;
