@@ -1,4 +1,4 @@
-package com.company;
+package com.company.entities;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
