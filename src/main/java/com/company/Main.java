@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.entities.Orders;
+import com.company.handlers.CrudHandler;
 import com.company.handlers.ReportHandler;
 import com.company.handlers.iHandler;
 import org.hibernate.Session;
@@ -24,26 +25,28 @@ public class Main {
         session.close();
 
         */
+        if (args.length == 0) {
+            System.out.println("No option provided. Available: '-crud', '-report', '-order'");
+            return;
+        }
 
         iHandler handler;
 
         switch(args[0]) {
             case "-crud":
-                return;
+                handler = new CrudHandler();
+                break;
             case "-report":
                 handler = new ReportHandler();
                 break;
             case "-order":
                 return;
             default:
-                System.out.println("Must specify option");
+                System.out.println("Must specify existing option. Available: '-crud', '-report', '-order'");
                 return;
         }
 
         handler.handle(args);
-
-        return;
-
     }
     private static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
