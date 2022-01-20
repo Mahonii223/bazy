@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.entities.Orders;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,6 +14,10 @@ public class Main {
         sessionFactory = getSessionFactory();
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
+
+        Orders order = session.get(Orders.class, 10298);
+        System.out.println(order.getOrderDate());
+
         tx.commit();
         session.close();
     }
@@ -23,8 +28,5 @@ public class Main {
                     configuration.configure().buildSessionFactory();
         }
         return sessionFactory;
-
-
-
     }
 }

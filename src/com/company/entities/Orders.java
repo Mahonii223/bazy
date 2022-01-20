@@ -3,14 +3,16 @@ package com.company.entities;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.sql.Date;
 import java.util.Objects;
 
 @Entity
 public class Orders {
+    @Id
     @Basic
     @Column(name = "OrderID", nullable = true)
-    private Short orderId;
+    private Integer orderId;
     @Basic
     @Column(name = "CustomerID", nullable = true, length = 50)
     private String customerId;
@@ -51,11 +53,11 @@ public class Orders {
     @Column(name = "ShipCountry", nullable = true, length = 50)
     private String shipCountry;
 
-    public Short getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Short orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 
