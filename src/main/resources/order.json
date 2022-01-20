@@ -1,0 +1,29 @@
+{
+  "customerId": "OCEAN",
+  "employeeId": 3,
+  "products": [
+    {
+      "productId": 1,
+      "quantity": 1
+    },
+    {
+      "productId": 3,
+      "quantity": 4
+    },
+    {
+      "productId": 5,
+      "quantity": 3
+    },
+  ],
+  "OrderDate": "2022-01-17",
+  "RequiredDate": "2022-01-26",
+  "ShippedDate": "2022-01-18",
+  "ShipVia": 1,
+  "Freight": 1,
+  "ShipName": "Oceno Atlantico Ltda.",
+  "ShipAddress": "Ing. Gustavo Moncada 8585 Piso 20-A",
+  "ShipCity": "Buenos Aires",
+  "ShipRegion": null,
+  "ShipPostalCode": "1010",
+  "ShipCountry": "Argentina"
+}

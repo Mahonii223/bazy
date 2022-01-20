@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.entities.Orders;
+import com.company.handlers.OrderHandler;
 import com.company.handlers.ReportHandler;
 import com.company.handlers.iHandler;
 import org.hibernate.Session;
@@ -13,17 +14,10 @@ public class Main {
     private static SessionFactory sessionFactory = null;
 
     public static void main(String[] args) {
-        /*sessionFactory = getSessionFactory();
+        sessionFactory = getSessionFactory();
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();
 
-        Orders order = session.get(Orders.class, 10298);
-        System.out.println(order.getOrderDate());
-
-        tx.commit();
-        session.close();
-
-        */
 
         iHandler handler;
 
@@ -34,15 +28,22 @@ public class Main {
                 handler = new ReportHandler();
                 break;
             case "-order":
-                return;
+                handler = new OrderHandler();
+                handler.handle(args);
             default:
                 System.out.println("Must specify option");
                 return;
         }
 
-        handler.handle(args);
+        //handler.handle(args);
 
-        return;
+
+        tx.commit();
+        session.close();
+
+
+
+
 
     }
     private static SessionFactory getSessionFactory() {

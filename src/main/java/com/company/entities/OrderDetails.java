@@ -11,7 +11,7 @@ public class OrderDetails {
     private short odId;
     @Basic
     @Column(name = "OrderID", nullable = false)
-    private short orderId;
+    private Integer orderId;
     @Basic
     @Column(name = "ProductID", nullable = false)
     private byte productId;
@@ -33,11 +33,11 @@ public class OrderDetails {
         this.odId = odId;
     }
 
-    public short getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(short orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 

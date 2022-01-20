@@ -53,6 +53,9 @@ public class Orders {
     @Column(name = "ShipCountry", nullable = true, length = 50)
     private String shipCountry;
 
+    public Orders() {
+    }
+
     public Integer getOrderId() {
         return orderId;
     }
