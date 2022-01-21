@@ -13,7 +13,10 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 
 public class OrderHandler implements iHandler {
@@ -22,7 +25,7 @@ public class OrderHandler implements iHandler {
     private OrderDetailsRepositoryImpl ordd;
     private String customerId = null;
     private byte employeeId = 0;
-    private Map<Byte, Byte> productsAndQuantities = null;
+    private List<Map<String, Byte>> productsAndQuantities = null;
     private Date orderDate = null;
     private Date requiredDate = null;
     private Date shippedDate = null;
@@ -38,7 +41,7 @@ public class OrderHandler implements iHandler {
     private byte unitPrice = 0;
     private byte discount = 0;
     @Override
-    public void handle(String[] args) {
+    public void handle(String[] args) throws  IOException{
 
 
         setParameters(args[1]);
@@ -48,30 +51,32 @@ public class OrderHandler implements iHandler {
     }
 
 
-    public void setParameters(String fileName) {
+    public void setParameters(String fileName) throws IOException {
         try {
             Gson gson = new Gson();
             JsonReader reader = new JsonReader(new FileReader(fileName));
+
             ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> map = mapper.readValue(Paths.get(fileName).toFile(), Map.class);
             // Properties properties = gson.fromJson(reader, Properties.class);
 
-            String customerId = mapper.readValue("customerId", String.class);
-            byte employeeId = mapper.readValue("customerId", Byte.class);
-            Map<Byte, Integer> productsAndQuantities = mapper.readValue("products", Map.class);
-            Date orderDate = mapper.readValue("orderDate", Date.class);
-            Date requiredDate = mapper.readValue("requiredDate", Date.class);
-            Date shippedDate = mapper.readValue("shippedDate", Date.class);
-            byte shipVia = mapper.readValue("shipVia", Byte.class);
-            byte freight = mapper.readValue("freight", Byte.class);
-            String shipName = mapper.readValue("shipName", String.class);
-            String shipAddress = mapper.readValue("shipAddress", String.class);
-            String shipCity = mapper.readValue("shipCity", String.class);
-            String shipRegion = mapper.readValue("shipRegion", String.class);
-            String shipPostalCode = mapper.readValue("shipPostalCode", String.class);
-            String shipCountry = mapper.readValue("shipCountry", String.class);
-            byte quantity = mapper.readValue("quantity", Byte.class);
-            byte unitPrice = mapper.readValue("unitPrice", Byte.class);
-            byte discount = mapper.readValue("discount", Byte.class);
+            customerId =(String) map.get("customerId");
+            employeeId = (byte) map.get("customerId");
+             productsAndQuantities =  (List)map.get("products");
+             orderDate =(Date)  map.get("orderDate");
+            requiredDate = (Date) map.get("requiredDate");
+             shippedDate = (Date) map.get("shippedDate");
+             shipVia =(byte) map.get("shipVia");
+             freight = (byte)map.get("freight");
+             shipName = (String)map.get("shipName");
+             shipAddress =(String) map.get("shipAddress");
+             shipCity = (String) map.get("shipCity");
+             shipRegion = (String) map.get("shipRegion");
+             shipPostalCode = (String) map.get("shipPostalCode");
+             shipCountry = (String) map.get("shipCountry");
+            quantity = (byte) map.get("quantity");
+            unitPrice =(byte)  map.get("unitPrice");
+            discount = (byte) map.get("discount");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -81,12 +86,12 @@ public class OrderHandler implements iHandler {
         }
     }
 
-    public void checkAmounts(Map<Byte, Byte> productsAndQuantities) {
+    public void checkAmounts(List<Map<String, Byte>> productsAndQuantities) {
         int flag = 0;
 
-        for (Map.Entry<Byte, Byte> entry : productsAndQuantities.entrySet()) {
-            byte productId = entry.getKey();
-            int quantity = entry.getValue();
+        for (Map<String, Byte> entry : productsAndQuantities) {
+            byte productId = entry.get("productId");
+            byte quantity = entry.get("quantity");
             if (prod.getUnitsOnStock(productId) < quantity) {
                 //System.out.println("Available quanity of product: " + prod.getById(productId).getProductName() + "is lower than required");
                 flag = -1;
@@ -95,16 +100,16 @@ public class OrderHandler implements iHandler {
         }
         if (flag == 0) {
             System.out.println("All products are available for purchase in requested amount");
-            for (Map.Entry<Byte, Byte> entry : productsAndQuantities.entrySet()) {
-                System.out.println("Product: " + prod.getById(entry.getKey()).getProductName()
-                        + " Quantity: " + entry.getKey());
+            for (Map<String, Byte> entry : productsAndQuantities) {
+                System.out.println("Product: " + prod.getById(entry.get("productId")).getProductName()
+                        + " Quantity: " + entry.get("quantity"));
             }
         } else {
             System.err.println("Requested amounts exceed available amount of products");
         }
     }
 
-    public void createOrders(Map<Byte, Byte> productsAndQuantities) {
+    public void createOrders(List<Map<String, Byte>> productsAndQuantities) {
         Orders order = new Orders();
         order.setCustomerId(customerId);
         order.setEmployeeId(employeeId);
@@ -120,9 +125,9 @@ public class OrderHandler implements iHandler {
         order.setShipPostalCode(shipPostalCode);
         order.setShipCountry(shipCountry);
         orderImpl.saveOrder(order);
-        for (Map.Entry<Byte, Byte> entry : productsAndQuantities.entrySet()) {
-            byte productId = entry.getKey();
-            byte quantity = entry.getValue();
+        for (Map<String, Byte> entry : productsAndQuantities) {
+            byte productId = entry.get("productId");
+            byte quantity = entry.get("quantity");
             OrderDetails od = new OrderDetails();
             od.setOrderId(order.getOrderId());
             od.setProductId(productId);

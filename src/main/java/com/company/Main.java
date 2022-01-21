@@ -9,11 +9,13 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.io.IOException;
+
 public class Main {
 
     private static SessionFactory sessionFactory = null;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         sessionFactory = getSessionFactory();
         Session session = sessionFactory.openSession();
         Transaction tx = session.beginTransaction();

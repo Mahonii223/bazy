@@ -8,7 +8,7 @@
     <property name="connection.url">jdbc:sqlserver://localhost:1433</property>
     <property name="dialect">org.hibernate.dialect.SQLServerDialect</property>
     <property name="hibernate.connection.username">dbadmin</property>
-    <property name="hibernate.connection.password">admin</property>
+    <property name="hibernate.connection.password">dbadmin</property>
     <mapping class="com.company.entities.Categories"/>
     <mapping class="com.company.entities.Customers"/>
     <mapping class="com.company.entities.Empl"/>
