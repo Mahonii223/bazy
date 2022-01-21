@@ -1,13 +1,8 @@
-package main.java.com.company;
+package com.company;
 
-import com.company.entities.Orders;
-
-import main.java.com.company.handlers.ReportHandler;
-import main.java.com.company.handlers.iHandler;
-
-import org.hibernate.Session;
+import com.company.handlers.ReportHandler;
+import com.company.handlers.iHandler;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 public class Main {
@@ -40,8 +35,8 @@ public class Main {
 
         switch(args[0]) {
             case "-crud":
-                handler = new CrudHandler();
-                break;
+                //handler = new CrudHandler();
+                return;
             case "-report":
                 handler = new ReportHandler();
                 break;

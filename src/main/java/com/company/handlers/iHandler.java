@@ -1,4 +1,4 @@
-package main.java.com.company.handlers;
+package com.company.handlers;
 
 
 public interface iHandler {

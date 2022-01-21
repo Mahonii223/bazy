@@ -1,4 +1,4 @@
-package main.java.com.company.handlers;
+package com.company.handlers;
 
 
 import org.hibernate.Session;
@@ -8,7 +8,7 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.List;
 
-public class ReportHandler implements main.java.com.company.handlers.iHandler {
+public class ReportHandler implements iHandler {
 
     private static SessionFactory sessionFactory = null;
 
