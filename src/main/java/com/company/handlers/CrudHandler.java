@@ -1,18 +1,28 @@
 package com.company.handlers;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
+
+import javax.persistence.criteria.*;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 
 public class CrudHandler implements iHandler {
     private final Gson gson = new Gson();
+    private static SessionFactory sessionFactory = null;
 
     public static class CrudArgs {
         public Class<?> entity;
@@ -86,21 +96,109 @@ public class CrudHandler implements iHandler {
         return result;
     }
 
+//
+//    private Predicate getPredicateWhere(CriteriaBuilder cb, Root root, JsonElement element, String name) {
+//
+//
+//        if (element.isJsonObject()) {
+//            JsonObject obj = element.getAsJsonObject();
+//            if (name == "and") {
+//
+//            } else if (name == "or") {
+//
+//            } else {
+//                for(String key : obj.keySet()) {
+//
+//                }
+//            }
+//
+//        }
+//
+//
+//    }
+
+    private Predicate getPredicateFieldObject(CriteriaBuilder cb, Root<Object> root, JsonObject object, String fieldName) {
+        List<Predicate> predicates = new ArrayList<>();
+        for (String key: object.keySet()) {
+            if (key == "and") {
+
+            } else if (key == "or") {
+
+            } else {
+                Predicate p = getPredicateFieldPrimitive(cb, root, object.getAsJsonPrimitive(key), fieldName, key);
+                predicates.add(p);
+            }
+        }
+
+
+
+        return cb.and(predicates.toArray(new Predicate[0]));
+    }
+
+    private Predicate getPredicateFieldPrimitive(CriteriaBuilder cb, Root<Object> root, JsonPrimitive primitive, String fieldName, String op) {
+        if (op == null) op = "equal";
+
+        try {
+            Method method = cb.getClass().getMethod(op, Expression.class, Object.class);
+
+            if (primitive.isBoolean()) {
+                return (Predicate) method.invoke(cb, root.get(fieldName), primitive.getAsBoolean());
+            }
+            if (primitive.isNumber()) {
+                return (Predicate) method.invoke(cb, root.get(fieldName), primitive.getAsNumber());
+            }
+            if (primitive.isString()) {
+                return (Predicate) method.invoke(cb, root.get(fieldName), primitive.getAsString());
+            }
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private CriteriaQuery<Object> buildCriteria(Class<?> entity, String query) {
+        JsonObject top = JsonParser.parseString(query).getAsJsonObject();
+        if (!top.has("where")) {
+            System.out.println("JSON parsing: No key named 'where' at the top level.");
+        }
+
+        Session session = getSessionFactory().openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+
+        CriteriaQuery<Object> cr = cb.createQuery();
+        Root<Object> root = cr.from(Object.class);
+
+        JsonObject where = top.get("where").getAsJsonObject();
+        List<Predicate> predicates = new ArrayList<>();
+        for (String key: where.keySet()) {
+            if (key == "and") {
+
+            } else if (key == "or") {
+
+            } else {
+                JsonElement el = where.get(key);
+                if (el.isJsonObject()) {
+                    Predicate p = getPredicateFieldObject(cb, root, el.getAsJsonObject(), key);
+                    predicates.add(p);
+                } else if (el.isJsonPrimitive()) {
+                    Predicate p = getPredicateFieldPrimitive(cb, root, el.getAsJsonPrimitive(), key, null);
+                    predicates.add(p);
+                }
+            }
+        }
+
+        cr.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
+        return cr;
+    }
+
     private void create(CrudArgs args) {
 
     }
 
     private void read(CrudArgs args) {
-        try {
-//            args.entity.cast()
-            System.out.println(args.query);
-            Object test = gson.fromJson(args.query, Object.class);
-            System.out.println(test);
-
-        } catch (JsonSyntaxException exception) {
-            System.out.println(exception.getMessage());
-            System.out.println(Arrays.toString(exception.getStackTrace()));
-        }
+        CriteriaQuery<Object> cr = buildCriteria(args.entity, args.query);
+        System.out.println(cr);
     }
 
     private void update(CrudArgs args) {
@@ -111,5 +209,12 @@ public class CrudHandler implements iHandler {
 
     }
 
-
+    private static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            Configuration configuration = new Configuration();
+            sessionFactory =
+                    configuration.configure().buildSessionFactory();
+        }
+        return sessionFactory;
+    }
 }

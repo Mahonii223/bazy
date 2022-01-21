@@ -1,5 +1,8 @@
 {
   "where": {
-    "CustomerId": "ALFKI"
+    "CustomerId": {
+      "equal": "ALFKI"
+    },
+    "CompanyName": "Maria Anders"
   }
 }
