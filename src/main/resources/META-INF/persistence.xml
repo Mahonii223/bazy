@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"             xsi:schemaLocation="http://java.sun.com/xml/ns/persistencehttp://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"             version="2.0">
+    <persistence-unit name="persistence"
+                      transaction-type="RESOURCE_LOCAL">
+        <class>com.company.entities.Categories</class>
+        <class>com.company.entities.Customers</class>
+        <class>com.company.entities.Empl</class>
+        <class>com.company.entities.OrderDetails</class>
+        <class>com.company.entities.Orders</class>
+        <class>com.company.entities.Products</class>
+        <class>com.company.entities.Shippers</class>
+        <class>com.company.entities.Suppliers</class>
+        <properties>
+            <property name="hibernate.connection.driver_class"
+                      value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="hibernate.connection.url"
+                      value="jdbc:sqlserver://localhost:1433"/>
+            <property name="javax.persistence.jdbc.user" value="dbadmin"/>
+            <property name="javax.persistence.jdbc.password" value="dbadmin"/>
+            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.format_sql" value="true" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.generateDdl" value = "true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

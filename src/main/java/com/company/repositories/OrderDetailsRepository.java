@@ -6,5 +6,5 @@ public interface OrderDetailsRepository {
 
     OrderDetails getById(short odId);
     OrderDetails getByOrderId(short orderId);
-
+    OrderDetails save(OrderDetails od);
 }

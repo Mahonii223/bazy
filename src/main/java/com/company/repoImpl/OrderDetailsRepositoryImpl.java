@@ -20,4 +20,14 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     public OrderDetails getByOrderId(short orderId) {
         return em.find(OrderDetails.class, orderId);
     }
+
+    @Override
+    public OrderDetails save(OrderDetails od) {
+        if (od.getOrderId()==-1) {
+            em.persist(od);
+        } else {
+            od = em.merge(od);
+        }
+        return od;
+    }
 }

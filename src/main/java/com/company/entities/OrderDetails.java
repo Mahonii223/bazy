@@ -5,7 +5,7 @@ import java.util.Objects;
 
 @Entity
 public class OrderDetails {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "odID", nullable = false)
     private short odId;

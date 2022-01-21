@@ -1,9 +1,12 @@
 package com.company;
 
+import com.company.handlers.OrderHandler;
 import com.company.handlers.ReportHandler;
 import com.company.handlers.iHandler;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+
+import java.io.IOException;
 
 public class Main {
 
@@ -26,14 +29,14 @@ public class Main {
             return;
         }
 
-        if(args.length == 0){
+        if (args.length == 0) {
             System.out.println("Must specify option!");
             return;
         }
 
         iHandler handler;
 
-        switch(args[0]) {
+        switch (args[0]) {
             case "-crud":
                 //handler = new CrudHandler();
                 return;
@@ -41,20 +44,16 @@ public class Main {
                 handler = new ReportHandler();
                 break;
             case "-order":
-                return;
+                handler = new OrderHandler();
+                break;
             default:
                 System.out.println("Invalid option: " + args[0]);
                 return;
         }
-
-        handler.handle(args);
-    }
-    private static SessionFactory getSessionFactory() {
-        if (sessionFactory == null) {
-            Configuration configuration = new Configuration();
-            sessionFactory =
-                    configuration.configure().buildSessionFactory();
+        try {
+            handler.handle(args);
+        } catch (IOException e) {
+            System.out.println("IO exception");
         }
-        return sessionFactory;
     }
 }
