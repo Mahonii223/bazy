@@ -1,8 +1,10 @@
 package main.java.com.company;
 
 import com.company.entities.Orders;
+
 import main.java.com.company.handlers.ReportHandler;
 import main.java.com.company.handlers.iHandler;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -24,6 +26,10 @@ public class Main {
         session.close();
 
         */
+        if (args.length == 0) {
+            System.out.println("No option provided. Available: '-crud', '-report', '-order'");
+            return;
+        }
 
         if(args.length == 0){
             System.out.println("Must specify option!");
@@ -34,7 +40,8 @@ public class Main {
 
         switch(args[0]) {
             case "-crud":
-                return;
+                handler = new CrudHandler();
+                break;
             case "-report":
                 handler = new ReportHandler();
                 break;
@@ -46,9 +53,6 @@ public class Main {
         }
 
         handler.handle(args);
-
-        return;
-
     }
     private static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
