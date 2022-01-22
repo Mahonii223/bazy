@@ -1,0 +1,7 @@
+{
+  "where": {
+    "unitsInStock": {
+      "lessThan": 5
+    }
+  }
+}
