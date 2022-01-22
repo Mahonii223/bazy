@@ -147,16 +147,13 @@ public class CrudHandler implements iHandler {
         return null;
     }
 
-    private Predicate buildWhere(Session session, Class<?> entity, String query) {
+    private Predicate buildWhere(Session session, Root root, Class<?> entity, String query) {
         JsonObject top = JsonParser.parseString(query).getAsJsonObject();
         if (!top.has("where")) {
             System.out.println("JSON parsing: No key named 'where' at the top level.");
         }
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
-
-        CriteriaQuery<Object> cr = cb.createQuery();
-        Root<?> root = cr.from(entity);
 
         JsonObject where = top.get("where").getAsJsonObject();
         List<Predicate> predicates = new ArrayList<>();
@@ -184,7 +181,7 @@ public class CrudHandler implements iHandler {
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Object> cr = cb.createQuery();
         Root<?> root = cr.from(entity);
-        Predicate where = buildWhere(session, entity, query);
+        Predicate where = buildWhere(session, root, entity, query);
         cr.select(root).where(where);
         return cr;
     }
@@ -194,7 +191,7 @@ public class CrudHandler implements iHandler {
         CriteriaDelete<Object> criteriaDelete = cb.createCriteriaDelete((Class<Object>) entity);
 
         Root<?> root = criteriaDelete.from((Class<Object>) entity);
-        Predicate where = buildWhere(session, entity, query);
+        Predicate where = buildWhere(session, root, entity, query);
         criteriaDelete.where(where);
         return criteriaDelete;
     }
@@ -243,16 +240,15 @@ public class CrudHandler implements iHandler {
     }
 
     private void delete(CrudArgs args) {
-//        Session session = getSessionFactory().openSession();
-//        CriteriaDelete<?> cr = buildCriteriaDelete(session, args.entity, args.query);
-//
-//        Query<?> q = session.createQuery(cr);
-//        System.out.println("SQL: " + q.getQueryString());
-//        List<?> results = q.getResultList();
-//        printResults(args.entity, results);
-////        Transaction t = session.beginTransaction();
-////        q.executeUpdate();
-////        t.commit();
+        Session session = getSessionFactory().openSession();
+        CriteriaDelete<?> cr = buildCriteriaDelete(session, args.entity, args.query);
+
+        Query<?> q = session.createQuery(cr);
+        System.out.println("SQL: " + q.getQueryString());
+
+        Transaction t = session.beginTransaction();
+        q.executeUpdate();
+        t.commit();
     }
 
     private void initMethodMap() {

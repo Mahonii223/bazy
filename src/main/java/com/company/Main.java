@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.handlers.CrudHandler;
 import com.company.handlers.OrderHandler;
 import com.company.handlers.ReportHandler;
 import com.company.handlers.iHandler;
@@ -38,8 +39,8 @@ public class Main {
 
         switch (args[0]) {
             case "-crud":
-                //handler = new CrudHandler();
-                return;
+                handler = new CrudHandler();
+                break;
             case "-report":
                 handler = new ReportHandler();
                 break;
