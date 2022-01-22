@@ -5,10 +5,10 @@ import java.util.Objects;
 
 @Entity
 public class Shippers {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ShipperID", nullable = false)
-    private byte shipperId;
+    private Integer shipperId;
     @Basic
     @Column(name = "CompanyName", nullable = false, length = 50)
     private String companyName;
@@ -16,11 +16,11 @@ public class Shippers {
     @Column(name = "Phone", nullable = false, length = 50)
     private String phone;
 
-    public byte getShipperId() {
+    public Integer getShipperId() {
         return shipperId;
     }
 
-    public void setShipperId(byte shipperId) {
+    public void setShipperId(Integer shipperId) {
         this.shipperId = shipperId;
     }
 

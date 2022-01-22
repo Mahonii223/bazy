@@ -1,0 +1,8 @@
+{
+  "where": {
+    "customerId": {
+      "equal": "ALFKI"
+    },
+    "contactName": "Maria Anders"
+  }
+}
